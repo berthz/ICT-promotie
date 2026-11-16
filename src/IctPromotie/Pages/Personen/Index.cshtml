@@ -1,0 +1,39 @@
+@page
+@model IctPromotie.Pages.Personen.IndexModel
+@{
+    ViewData["Title"] = "Mensen";
+}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0 me-auto">Mensen die activiteiten geven</h1>
+    <a class="btn btn-primary" asp-page="Bewerken">+ Persoon</a>
+</div>
+
+<div class="table-responsive blok p-0">
+    <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Naam</th><th>Rol</th><th>E-mail</th><th>Komende activiteiten</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var (p, komend) in Model.Lijst)
+            {
+                <tr>
+                    <td><a asp-page="Bewerken" asp-route-id="@p.Id" class="fw-semibold">@p.Naam</a></td>
+                    <td>@p.Rol</td>
+                    <td>@if (p.Email is not null) { <a href="mailto:@p.Email">@p.Email</a> }</td>
+                    <td>@komend</td>
+                    <td class="text-end text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-page="Bewerken" asp-route-id="@p.Id">Wijzigen</a>
+                        <form method="post" asp-page-handler="Verwijderen" asp-route-id="@p.Id" class="d-inline"
+                              data-vraag="@p.Naam verwijderen? Diegene wordt ook van alle activiteiten gehaald."
+                              onsubmit="return confirm(this.dataset.vraag)">
+                            <button class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (Model.Lijst.Count == 0)
+            {
+                <tr><td colspan="5" class="text-body-secondary">Nog niemand toegevoegd.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

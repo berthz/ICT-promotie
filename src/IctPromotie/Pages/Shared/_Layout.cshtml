@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] – ICT-promotie CHE Ede</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark hoofdmenu mb-4">
+            <div class="container-xl">
+                <a class="navbar-brand fw-semibold" asp-page="/Index">ICT-promotie <span class="opacity-75">· CHE Ede</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                        aria-controls="menu" aria-expanded="false" aria-label="Menu openen">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menu">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-page="/Index">Kalender</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Activiteiten/Index">Activiteiten</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Personen/Index">Mensen</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Materialen/Index">Materiaal</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Ideeen/Index">Ideeën</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Nieuws/Index">Nieuws</a></li>
+                    </ul>
+                    <a class="btn btn-sm btn-outline-light" asp-page="/Scherm" title="Weergave voor het grote scherm in de ICT-ruimte">Schermweergave</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-xl">
+        <main role="main" class="pb-5">
+            @if (TempData["Melding"] is string melding)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="status">
+                    @melding
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Sluiten"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

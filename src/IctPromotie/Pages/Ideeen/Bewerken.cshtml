@@ -1,0 +1,43 @@
+@page "{id:int}"
+@model IctPromotie.Pages.Ideeen.BewerkenModel
+@{
+    ViewData["Title"] = "Idee wijzigen";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="h3 mb-3">Idee wijzigen</h1>
+        <form method="post" class="blok">
+            <input type="hidden" asp-for="Idee.Id" />
+            <div class="mb-3">
+                <label asp-for="Idee.Titel" class="form-label"></label>
+                <input asp-for="Idee.Titel" class="form-control" />
+                <span asp-validation-for="Idee.Titel" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Idee.Omschrijving" class="form-label"></label>
+                <textarea asp-for="Idee.Omschrijving" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label asp-for="Idee.Inspanning" class="form-label">Moeite</label>
+                    <select asp-for="Idee.Inspanning" asp-items="Html.GetEnumSelectList<Inspanning>()" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Idee.Status" class="form-label"></label>
+                    <select asp-for="Idee.Status" asp-items="Html.GetEnumSelectList<IdeeStatus>()" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Idee.IngediendDoor" class="form-label"></label>
+                    <input asp-for="Idee.IngediendDoor" class="form-control" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a class="btn btn-outline-secondary" asp-page="Index">Annuleren</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

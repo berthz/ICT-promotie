@@ -1,0 +1,42 @@
+name: Bouwen
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bouwen:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Bouwen
+        run: dotnet build --configuration Release
+
+      - name: Publiceren voor Windows (zonder installatie)
+        run: >
+          dotnet publish src/IctPromotie/IctPromotie.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          --output publish
+
+      - name: Startscript toevoegen
+        run: Copy-Item scripts/start-scherm.cmd publish/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: IctPromotie-windows
+          path: publish/
+          retention-days: 30

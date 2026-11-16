@@ -1,0 +1,41 @@
+@model (string Titel, List<NieuwsItem> Items, bool ToonVerborgen)
+
+<section class="blok">
+    <h2 class="blok-titel">@Model.Titel <span class="badge text-bg-light border">@Model.Items.Count</span></h2>
+    @if (Model.Items.Count == 0)
+    {
+        <p class="text-body-secondary mb-0">Geen berichten.</p>
+    }
+    <ul class="lijst">
+        @foreach (var n in Model.Items)
+        {
+            <li class="@(n.Verborgen ? "opacity-50" : "")">
+                <div class="flex-grow-1">
+                    <a class="lijst-titel" href="@n.Url" target="_blank" rel="noopener">@n.Titel</a>
+                    <div class="lijst-sub">
+                        @n.Bron · @n.Gepubliceerd.ToString("d MMM yyyy") · @(n.Automatisch ? "automatisch" : "handmatig")@(n.Verborgen ? " · verborgen" : "")
+                    </div>
+                </div>
+                <div class="text-nowrap">
+                    <form method="post" asp-page-handler="WisselBereik" asp-route-id="@n.Id" asp-route-toonverborgen="@Model.ToonVerborgen" class="d-inline">
+                        <button class="btn btn-sm btn-link p-0 me-2" title="Verplaats naar @(n.Bereik == NieuwsBereik.Lokaal ? "landelijk" : "lokaal")">⇄</button>
+                    </form>
+                    <a class="btn btn-sm btn-link p-0 me-2" asp-page="Bewerken" asp-route-id="@n.Id" title="Wijzigen">✎</a>
+                    @if (n.Verborgen)
+                    {
+                        <form method="post" asp-page-handler="Terugzetten" asp-route-id="@n.Id" asp-route-toonverborgen="@Model.ToonVerborgen" class="d-inline">
+                            <button class="btn btn-sm btn-link p-0" title="Weer tonen">↺</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Verwijderen" asp-route-id="@n.Id" asp-route-toonverborgen="@Model.ToonVerborgen" class="d-inline"
+                              onsubmit="return confirm('@(n.Automatisch ? "Dit bericht verbergen? (Bv. omdat het niet over ICT aan de CHE gaat.)" : "Dit bericht verwijderen?")')">
+                            <button class="btn btn-sm btn-link text-danger p-0" title="@(n.Automatisch ? "Verbergen" : "Verwijderen")">×</button>
+                        </form>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+</section>

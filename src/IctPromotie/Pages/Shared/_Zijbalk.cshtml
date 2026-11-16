@@ -1,0 +1,76 @@
+@model Overzicht
+@{
+    var scherm = Model.Kalender.Scherm;
+}
+
+@if (Model.VolgendeOpenDag is { } od)
+{
+    var dagen = (od.Start.Date - DateTime.Today).Days;
+    <section class="blok aftellen">
+        <div class="aftellen-getal">@(dagen == 0 ? "Vandaag!" : dagen == 1 ? "Morgen!" : $"Nog {dagen} dagen")</div>
+        <div>tot <strong>@od.Titel</strong></div>
+        <div class="opacity-75">@od.Wanneer@(od.Locatie is null ? "" : " · " + od.Locatie)</div>
+    </section>
+}
+
+<section class="blok">
+    <h2 class="blok-titel">Komende activiteiten</h2>
+    @if (Model.Komende.Count == 0)
+    {
+        <p class="text-body-secondary mb-0">Nog niets gepland. @if (!scherm) { <a asp-page="/Activiteiten/Bewerken">Voeg een activiteit toe.</a> }</p>
+    }
+    <ul class="lijst">
+        @foreach (var a in Model.Komende)
+        {
+            <li>
+                <span class="stip soort-@a.Soort.ToString().ToLowerInvariant()"></span>
+                <div>
+                    <a class="lijst-titel" asp-page="/Activiteiten/Bewerken" asp-route-id="@a.Id">@a.Titel</a>
+                    <div class="lijst-sub">@a.Wanneer@(a.Locatie is null ? "" : " · " + a.Locatie)</div>
+                    @if (a.Personen.Count > 0)
+                    {
+                        <div class="lijst-sub">👥 @string.Join(", ", a.Personen.Select(p => p.Naam))</div>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+</section>
+
+<section class="blok">
+    <h2 class="blok-titel">Top-ideeën <small>weinig moeite, veel effect</small></h2>
+    <ul class="lijst">
+        @foreach (var i in Model.Ideeen)
+        {
+            <li>
+                <span class="stemmen" title="Stemmen">▲ @i.Stemmen</span>
+                <div>
+                    <span class="lijst-titel">@i.Titel</span>
+                    <div class="lijst-sub">@i.Inspanning.Naam()@(i.Status == IdeeStatus.Gepland ? " · gaan we doen" : "")</div>
+                </div>
+            </li>
+        }
+    </ul>
+    @if (!scherm) { <a class="small" asp-page="/Ideeen/Index">Alle ideeën en zelf een idee toevoegen →</a> }
+</section>
+
+<section class="blok">
+    <h2 class="blok-titel">In het nieuws</h2>
+    @if (Model.Nieuws.Count == 0)
+    {
+        <p class="text-body-secondary mb-0">Nog geen nieuws gevonden.</p>
+    }
+    <ul class="lijst">
+        @foreach (var n in Model.Nieuws)
+        {
+            <li>
+                <span class="badge @(n.Bereik == NieuwsBereik.Lokaal ? "text-bg-warning" : "text-bg-secondary")">@n.Bereik</span>
+                <div>
+                    <a class="lijst-titel" href="@n.Url" target="_blank" rel="noopener">@n.Titel</a>
+                    <div class="lijst-sub">@n.Bron · @n.Gepubliceerd.ToString("d MMM yyyy")</div>
+                </div>
+            </li>
+        }
+    </ul>
+    @if (!scherm) { <a class="small" asp-page="/Nieuws/Index">Alle nieuwsberichten →</a> }
+</section>

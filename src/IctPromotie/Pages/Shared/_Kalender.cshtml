@@ -1,0 +1,36 @@
+@model KalenderModel
+@{
+    var vandaag = DateOnly.FromDateTime(DateTime.Today);
+    string[] dagnamen = ["ma", "di", "wo", "do", "vr", "za", "zo"];
+}
+<div class="kalender @(Model.Scherm ? "kalender-scherm" : "")" role="grid" aria-label="Kalender @Model.EersteDag.ToString("MMMM yyyy")">
+    @foreach (var naam in dagnamen)
+    {
+        <div class="kal-kop" role="columnheader">@naam</div>
+    }
+    @for (var i = 0; i < Model.AantalWeken * 7; i++)
+    {
+        var dag = Model.GridStart.AddDays(i);
+        var items = Model.Activiteiten.Where(a => a.ValtOp(dag)).ToList();
+        var klassen = "kal-dag"
+            + (dag.Month != Model.EersteDag.Month ? " kal-anders" : "")
+            + (dag == vandaag ? " kal-vandaag" : "")
+            + (dag < vandaag ? " kal-voorbij" : "");
+        <div class="@klassen" role="gridcell">
+            <div class="kal-nummer">
+                <span>@dag.Day</span>
+                @if (!Model.Scherm)
+                {
+                    <a class="kal-plus" asp-page="/Activiteiten/Bewerken" asp-route-datum="@dag.ToString("yyyy-MM-dd")"
+                       title="Activiteit toevoegen op @dag.ToString("d MMMM")">+</a>
+                }
+            </div>
+            @foreach (var a in items)
+            {
+                var tijd = DateOnly.FromDateTime(a.Start) == dag && a.Start.TimeOfDay != TimeSpan.Zero ? a.Start.ToString("HH:mm") + " " : "";
+                <a class="kal-item soort-@a.Soort.ToString().ToLowerInvariant()" asp-page="/Activiteiten/Bewerken" asp-route-id="@a.Id"
+                   title="@a.Titel – @a.Soort.Naam()@(a.Locatie is null ? "" : " – " + a.Locatie)">@tijd@a.Titel</a>
+            }
+        </div>
+    }
+</div>

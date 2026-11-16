@@ -1,0 +1,95 @@
+@page
+@model IctPromotie.Pages.Ideeen.IndexModel
+@{
+    ViewData["Title"] = "Ideeën";
+}
+
+<h1 class="h3 mb-1">Ideeën om de opleiding te promoten</h1>
+<p class="text-body-secondary">Kleine moeite, groot effect: deel je idee en stem op die van anderen. Het idee met de meeste stemmen komt op het scherm.</p>
+
+<div class="row g-4">
+    <div class="col-lg-4 order-lg-2">
+        <form method="post" class="blok">
+            <h2 class="blok-titel">Nieuw idee</h2>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-2">
+                <label asp-for="Nieuw.Titel" class="form-label"></label>
+                <input asp-for="Nieuw.Titel" class="form-control" placeholder="bv. Studenten posten een story vanaf de open dag" />
+                <span asp-validation-for="Nieuw.Titel" class="text-danger small"></span>
+            </div>
+            <div class="mb-2">
+                <label asp-for="Nieuw.Omschrijving" class="form-label"></label>
+                <textarea asp-for="Nieuw.Omschrijving" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label asp-for="Nieuw.Inspanning" class="form-label">Moeite</label>
+                    <select asp-for="Nieuw.Inspanning" asp-items="Html.GetEnumSelectList<Inspanning>()" class="form-select"></select>
+                </div>
+                <div class="col-6">
+                    <label asp-for="Nieuw.IngediendDoor" class="form-label">Je naam</label>
+                    <input asp-for="Nieuw.IngediendDoor" class="form-control" placeholder="optioneel" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Idee toevoegen</button>
+        </form>
+    </div>
+
+    <div class="col-lg-8 order-lg-1">
+        <form method="get" class="d-flex flex-wrap gap-2 mb-3">
+            <select class="form-select w-auto" name="Status" onchange="this.form.submit()" aria-label="Status">
+                <option value="">Alle open ideeën</option>
+                @foreach (var s in Enum.GetValues<IdeeStatus>())
+                {
+                    <option value="@s" selected="@(Model.Status == s)">@s.Naam()</option>
+                }
+            </select>
+            <select class="form-select w-auto" name="Inspanning" onchange="this.form.submit()" aria-label="Moeite">
+                <option value="">Elke moeite</option>
+                @foreach (var i in Enum.GetValues<Inspanning>())
+                {
+                    <option value="@i" selected="@(Model.Inspanning == i)">@i.Naam()</option>
+                }
+            </select>
+        </form>
+
+        <div class="d-grid gap-2">
+            @foreach (var idee in Model.Lijst)
+            {
+                <div class="idee-kaart">
+                    <form method="post" asp-page-handler="Stem" asp-route-id="@idee.Id"
+                          asp-route-status="@Model.Status" asp-route-inspanning="@Model.Inspanning" class="stem-knop">
+                        <button class="btn btn-outline-primary btn-sm w-100" title="Stem op dit idee">▲<br /><strong>@idee.Stemmen</strong></button>
+                    </form>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">@idee.Titel</div>
+                        @if (!string.IsNullOrWhiteSpace(idee.Omschrijving))
+                        {
+                            <div>@idee.Omschrijving</div>
+                        }
+                        <div class="small text-body-secondary mt-1">
+                            <span class="badge text-bg-light border">@idee.Inspanning.Naam()</span>
+                            <span class="badge @(idee.Status == IdeeStatus.Gepland ? "text-bg-primary" : idee.Status == IdeeStatus.Gedaan ? "text-bg-success" : "text-bg-light border")">@idee.Status.Naam()</span>
+                            @(idee.IngediendDoor is null ? "" : $"· van {idee.IngediendDoor}") · @idee.Aangemaakt.ToString("d MMM yyyy")
+                        </div>
+                    </div>
+                    <div class="text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-page="Bewerken" asp-route-id="@idee.Id">Wijzigen</a>
+                        <form method="post" asp-page-handler="Verwijderen" asp-route-id="@idee.Id" class="d-inline"
+                              onsubmit="return confirm('Dit idee verwijderen?')">
+                            <button class="btn btn-sm btn-outline-danger">×</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            @if (Model.Lijst.Count == 0)
+            {
+                <div class="blok text-body-secondary">Geen ideeën gevonden. Wees de eerste!</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

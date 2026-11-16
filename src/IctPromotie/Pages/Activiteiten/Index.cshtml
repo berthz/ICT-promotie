@@ -1,0 +1,71 @@
+@page
+@model IctPromotie.Pages.Activiteiten.IndexModel
+@{
+    ViewData["Title"] = "Activiteiten";
+}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0 me-auto">Activiteiten</h1>
+    <a class="btn btn-primary" asp-page="Bewerken">+ Activiteit</a>
+</div>
+
+<form method="get" class="d-flex flex-wrap gap-2 mb-3">
+    <select class="form-select w-auto" name="Soort" onchange="this.form.submit()" aria-label="Soort">
+        <option value="">Alle soorten</option>
+        @foreach (var s in Enum.GetValues<ActiviteitSoort>())
+        {
+            <option value="@s" selected="@(Model.Soort == s)">@s.Naam()</option>
+        }
+    </select>
+    <select class="form-select w-auto" name="Verleden" onchange="this.form.submit()" aria-label="Periode">
+        <option value="false" selected="@(!Model.Verleden)">Komend</option>
+        <option value="true" selected="@Model.Verleden">Geweest</option>
+    </select>
+    <noscript><button class="btn btn-outline-secondary">Filter</button></noscript>
+</form>
+
+@if (Model.Lijst.Count == 0)
+{
+    <div class="blok text-body-secondary">Geen activiteiten gevonden.</div>
+}
+else
+{
+    <div class="table-responsive blok p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr><th>Wanneer</th><th>Activiteit</th><th>Locatie</th><th>Wie</th><th>Materiaal</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.Lijst)
+                {
+                    <tr>
+                        <td class="text-nowrap">@a.Wanneer</td>
+                        <td>
+                            <span class="stip soort-@a.Soort.ToString().ToLowerInvariant() me-1"></span>
+                            <a asp-page="Bewerken" asp-route-id="@a.Id" class="fw-semibold">@a.Titel</a>
+                            <div class="small text-body-secondary">@a.Soort.Naam()</div>
+                            @if (Model.Conflicten.TryGetValue(a.Id, out var meldingen))
+                            {
+                                foreach (var m in meldingen)
+                                {
+                                    <div class="small text-danger">⚠ @m</div>
+                                }
+                            }
+                        </td>
+                        <td>@a.Locatie</td>
+                        <td>@string.Join(", ", a.Personen.Select(p => p.Naam))</td>
+                        <td>@string.Join(", ", a.Materialen.Select(m => m.Naam))</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="Bewerken" asp-route-id="@a.Id">Wijzigen</a>
+                            <form method="post" asp-page-handler="Verwijderen" asp-route-id="@a.Id"
+                                  asp-route-soort="@Model.Soort" asp-route-verleden="@Model.Verleden" class="d-inline"
+                                  onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?')">
+                                <button class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

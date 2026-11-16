@@ -1,0 +1,14 @@
+{
+  "name": "ICT-promotie (.NET 8)",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": { "label": "ICT-promotie", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "dotnet restore",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-dotnettools.csdevkit"]
+    }
+  }
+}

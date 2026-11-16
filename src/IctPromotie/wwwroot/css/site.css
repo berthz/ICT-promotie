@@ -1,0 +1,366 @@
+:root {
+    --merk: #1f4e79;
+    --merk-donker: #163a5c;
+    --intern: #2f6fde;
+    --extern: #1f9d6b;
+    --opendag: #e07a12;
+    --rand: #dfe3e8;
+    --vlak: #ffffff;
+    --achtergrond: #f4f6f9;
+}
+
+body {
+    background: var(--achtergrond);
+}
+
+.hoofdmenu {
+    background: var(--merk);
+}
+
+.hoofdmenu .nav-link {
+    color: rgba(255, 255, 255, .85);
+}
+
+.hoofdmenu .nav-link:hover,
+.hoofdmenu .nav-link:focus {
+    color: #fff;
+}
+
+/* ---------- Kleuren per soort activiteit ---------- */
+.soort-intern { --kleur: var(--intern); }
+.soort-extern { --kleur: var(--extern); }
+.soort-opendag { --kleur: var(--opendag); }
+
+.stip {
+    display: inline-block;
+    flex: none;
+    width: .7rem;
+    height: .7rem;
+    border-radius: 50%;
+    background: var(--kleur, #999);
+    margin-top: .35rem;
+}
+
+.legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: .875rem;
+}
+
+.legenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.legenda .stip {
+    margin-top: 0;
+}
+
+/* ---------- Kalender ---------- */
+.kalender {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rand);
+    border: 1px solid var(--rand);
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.kal-kop {
+    background: var(--merk);
+    color: #fff;
+    text-align: center;
+    font-size: .8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: .35rem 0;
+}
+
+.kal-dag {
+    background: var(--vlak);
+    min-height: 6.5rem;
+    padding: .25rem .3rem .4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.kal-anders {
+    background: #f8f9fb;
+}
+
+.kal-anders .kal-nummer {
+    color: #aab;
+}
+
+.kal-voorbij .kal-item {
+    opacity: .55;
+}
+
+.kal-vandaag {
+    box-shadow: inset 0 0 0 2px var(--merk);
+}
+
+.kal-vandaag .kal-nummer span {
+    background: var(--merk);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 0 .45rem;
+}
+
+.kal-nummer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.kal-plus {
+    visibility: hidden;
+    text-decoration: none;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0 .35rem;
+    border-radius: .25rem;
+}
+
+.kal-dag:hover .kal-plus,
+.kal-plus:focus {
+    visibility: visible;
+    background: #e8eef7;
+}
+
+.kal-item {
+    display: block;
+    font-size: .78rem;
+    line-height: 1.25;
+    padding: .15rem .3rem;
+    border-radius: .25rem;
+    border-left: 3px solid var(--kleur);
+    background: color-mix(in srgb, var(--kleur) 14%, white);
+    color: #1d2733;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kal-item:hover {
+    background: color-mix(in srgb, var(--kleur) 25%, white);
+}
+
+@media (max-width: 575.98px) {
+    .kal-dag { min-height: 4.5rem; }
+    .kal-item { font-size: .68rem; white-space: normal; }
+}
+
+/* ---------- Blokken in de zijbalk ---------- */
+.blok {
+    background: var(--vlak);
+    border: 1px solid var(--rand);
+    border-radius: .5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.blok-titel {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: .75rem;
+}
+
+.blok-titel small {
+    font-weight: 400;
+    color: #6c757d;
+    font-size: .8rem;
+}
+
+.aftellen {
+    background: var(--opendag);
+    border-color: var(--opendag);
+    color: #fff;
+}
+
+.aftellen-getal {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.lijst {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 .5rem;
+}
+
+.lijst li {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    padding: .4rem 0;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.lijst li:last-child {
+    border-bottom: 0;
+}
+
+.lijst-titel {
+    font-weight: 600;
+    color: #1d2733;
+    text-decoration: none;
+}
+
+a.lijst-titel:hover {
+    text-decoration: underline;
+}
+
+.lijst-sub {
+    font-size: .8rem;
+    color: #6c757d;
+}
+
+.stemmen {
+    flex: none;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--merk);
+    background: #e8eef7;
+    border-radius: .25rem;
+    padding: .1rem .35rem;
+}
+
+/* ---------- Kaarten voor ideeën ---------- */
+.idee-kaart {
+    background: var(--vlak);
+    border: 1px solid var(--rand);
+    border-radius: .5rem;
+    padding: .9rem 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.stem-knop {
+    flex: none;
+    width: 3.2rem;
+    text-align: center;
+    line-height: 1.1;
+}
+
+/* ---------- Schermweergave (ICT-ruimte) ---------- */
+body.scherm {
+    background: #0f2236;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 1.05rem;
+}
+
+.scherm-kop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem .5rem;
+}
+
+.scherm-titel {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.scherm-sub {
+    opacity: .75;
+}
+
+.scherm-klok {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.scherm-inhoud {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: .5rem 2rem;
+    min-height: 0;
+}
+
+.scherm-kalender {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.scherm .kalender {
+    flex: 1;
+    grid-template-rows: auto;
+    grid-auto-rows: minmax(0, 1fr);
+    border-color: #2a4560;
+    background: #2a4560;
+}
+
+.scherm .kal-dag {
+    min-height: 0;
+    overflow: hidden;
+    color: #1d2733;
+}
+
+.scherm .kal-nummer {
+    font-size: 1rem;
+}
+
+.scherm .kal-item {
+    font-size: .9rem;
+    white-space: normal;
+}
+
+.scherm .legenda {
+    font-size: 1rem;
+}
+
+.scherm-zijbalk {
+    overflow: hidden;
+    color: #1d2733;
+}
+
+.scherm .blok {
+    padding: .8rem 1rem;
+    margin-bottom: .8rem;
+}
+
+.scherm .aftellen {
+    color: #fff;
+}
+
+.scherm .aftellen-getal {
+    font-size: 2.4rem;
+}
+
+.scherm-voet {
+    padding: .6rem 2rem;
+    background: rgba(255, 255, 255, .08);
+    font-size: 1.1rem;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.scherm-terug {
+    margin-left: auto;
+    color: rgba(255, 255, 255, .35);
+    font-size: .8rem;
+}
+
+@media (max-width: 991.98px) {
+    body.scherm { height: auto; overflow: auto; }
+    .scherm-inhoud { grid-template-columns: 1fr; }
+}

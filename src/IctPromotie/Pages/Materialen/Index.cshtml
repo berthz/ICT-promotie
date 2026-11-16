@@ -1,0 +1,47 @@
+@page
+@model IctPromotie.Pages.Materialen.IndexModel
+@{
+    ViewData["Title"] = "Materiaal";
+}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0 me-auto">Promotiemateriaal</h1>
+    <a class="btn btn-primary" asp-page="Bewerken">+ Materiaal</a>
+</div>
+
+<div class="table-responsive blok p-0">
+    <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Materiaal</th><th>Aantal</th><th>Waar ligt het?</th><th>Eerstvolgend nodig</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var (m, volgende) in Model.Lijst)
+            {
+                <tr>
+                    <td>
+                        <a asp-page="Bewerken" asp-route-id="@m.Id" class="fw-semibold">@m.Naam</a>
+                        <div class="small text-body-secondary">@m.Omschrijving</div>
+                    </td>
+                    <td>@m.Aantal</td>
+                    <td>@m.Opslaglocatie</td>
+                    <td>
+                        @if (volgende is not null)
+                        {
+                            <a asp-page="/Activiteiten/Bewerken" asp-route-id="@volgende.Id">@volgende.Titel</a>
+                            <div class="small text-body-secondary">@volgende.Wanneer</div>
+                        }
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-page="Bewerken" asp-route-id="@m.Id">Wijzigen</a>
+                        <form method="post" asp-page-handler="Verwijderen" asp-route-id="@m.Id" class="d-inline"
+                              onsubmit="return confirm('Dit materiaal verwijderen? Het wordt ook van alle activiteiten gehaald.')">
+                            <button class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (Model.Lijst.Count == 0)
+            {
+                <tr><td colspan="5" class="text-body-secondary">Nog geen materiaal toegevoegd.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

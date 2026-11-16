@@ -1,0 +1,35 @@
+@page
+@model IctPromotie.Pages.Personen.BewerkenModel
+@{
+    ViewData["Title"] = Model.Persoon.Id == 0 ? "Persoon toevoegen" : "Persoon wijzigen";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="h3 mb-3">@ViewData["Title"]</h1>
+        <form method="post" class="blok">
+            <input type="hidden" asp-for="Persoon.Id" />
+            <div class="mb-3">
+                <label asp-for="Persoon.Naam" class="form-label"></label>
+                <input asp-for="Persoon.Naam" class="form-control" autofocus />
+                <span asp-validation-for="Persoon.Naam" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Persoon.Rol" class="form-label"></label>
+                <input asp-for="Persoon.Rol" class="form-control" list="rollen" placeholder="bv. Docent, Student, Voorlichting" />
+                <datalist id="rollen"><option value="Docent"></option><option value="Student"></option><option value="Voorlichting"></option><option value="Alumnus"></option></datalist>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Persoon.Email" class="form-label"></label>
+                <input asp-for="Persoon.Email" class="form-control" />
+                <span asp-validation-for="Persoon.Email" class="text-danger small"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a class="btn btn-outline-secondary" asp-page="Index">Annuleren</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

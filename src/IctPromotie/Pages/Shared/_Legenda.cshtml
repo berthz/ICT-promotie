@@ -1,0 +1,6 @@
+<div class="legenda">
+    @foreach (var s in Enum.GetValues<ActiviteitSoort>())
+    {
+        <span class="legenda-item"><span class="stip soort-@s.ToString().ToLowerInvariant()"></span>@s.Naam()</span>
+    }
+</div>

@@ -1,0 +1,51 @@
+@page
+@model IctPromotie.Pages.Nieuws.BewerkenModel
+@{
+    ViewData["Title"] = Model.Item.Id == 0 ? "Nieuwsbericht toevoegen" : "Nieuwsbericht wijzigen";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-3">@ViewData["Title"]</h1>
+        <form method="post" class="blok">
+            <input type="hidden" asp-for="Item.Id" />
+            <div class="mb-3">
+                <label asp-for="Item.Url" class="form-label"></label>
+                <input asp-for="Item.Url" class="form-control" placeholder="https://..." type="url" autofocus />
+                <span asp-validation-for="Item.Url" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Item.Titel" class="form-label"></label>
+                <input asp-for="Item.Titel" class="form-control" />
+                <span asp-validation-for="Item.Titel" class="text-danger small"></span>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-5">
+                    <label asp-for="Item.Bron" class="form-label"></label>
+                    <input asp-for="Item.Bron" class="form-control" placeholder="bv. Ede Stad" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Item.Gepubliceerd" class="form-label"></label>
+                    <input asp-for="Item.Gepubliceerd" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Item.Bereik" class="form-label"></label>
+                    <select asp-for="Item.Bereik" asp-items="Html.GetEnumSelectList<NieuwsBereik>()" class="form-select"></select>
+                </div>
+            </div>
+            @if (Model.Item.Id != 0)
+            {
+                <div class="form-check mb-3">
+                    <input asp-for="Item.Verborgen" class="form-check-input" />
+                    <label asp-for="Item.Verborgen" class="form-check-label">Verborgen (niet tonen)</label>
+                </div>
+            }
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a class="btn btn-outline-secondary" asp-page="Index">Annuleren</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

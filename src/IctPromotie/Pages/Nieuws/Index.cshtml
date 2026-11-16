@@ -1,0 +1,34 @@
+@page
+@model IctPromotie.Pages.Nieuws.IndexModel
+@{
+    ViewData["Title"] = "Nieuws";
+}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+    <h1 class="h3 mb-0 me-auto">ICT aan de CHE in het nieuws</h1>
+    <form method="post" asp-page-handler="Ophalen" asp-route-toonverborgen="@Model.ToonVerborgen">
+        <button class="btn btn-outline-primary">↻ Nu ophalen</button>
+    </form>
+    <a class="btn btn-primary" asp-page="Bewerken">+ Bericht</a>
+</div>
+<p class="text-body-secondary">
+    Berichten worden elke paar uur automatisch via Google Nieuws opgehaald. Gaat een bericht niet over ons? Klik op × om het te verbergen.
+    Met ⇄ verplaats je een bericht tussen lokaal en landelijk.
+    @if (Model.ToonVerborgen)
+    {
+        <a asp-route-toonverborgen="false">Verborgen berichten niet tonen</a>
+    }
+    else
+    {
+        <a asp-route-toonverborgen="true">Verborgen berichten tonen</a>
+    }
+</p>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <partial name="_NieuwsLijst" model='("Lokaal nieuws", Model.Lokaal, Model.ToonVerborgen)' />
+    </div>
+    <div class="col-lg-6">
+        <partial name="_NieuwsLijst" model='("Landelijk nieuws", Model.Landelijk, Model.ToonVerborgen)' />
+    </div>
+</div>

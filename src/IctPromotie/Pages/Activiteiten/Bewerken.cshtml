@@ -1,0 +1,97 @@
+@page
+@model IctPromotie.Pages.Activiteiten.BewerkenModel
+@{
+    var nieuw = Model.Activiteit.Id == 0;
+    ViewData["Title"] = nieuw ? "Activiteit toevoegen" : "Activiteit wijzigen";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <h1 class="h3 mb-3">@ViewData["Title"]</h1>
+
+        @foreach (var w in Model.Waarschuwingen)
+        {
+            <div class="alert alert-warning py-2">⚠ @w</div>
+        }
+
+        <form method="post" class="blok">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Activiteit.Id" />
+
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label asp-for="Activiteit.Titel" class="form-label">Titel</label>
+                    <input asp-for="Activiteit.Titel" class="form-control" placeholder="bv. Studiebeurs Utrecht" autofocus="@nieuw" />
+                    <span asp-validation-for="Activiteit.Titel" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Activiteit.Soort" class="form-label">Soort</label>
+                    <select asp-for="Activiteit.Soort" asp-items="Html.GetEnumSelectList<ActiviteitSoort>()" class="form-select"></select>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Activiteit.Start" class="form-label"></label>
+                    <input asp-for="Activiteit.Start" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="Activiteit.Start" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Activiteit.Eind" class="form-label"></label> <span class="small text-body-secondary">(optioneel)</span>
+                    <input asp-for="Activiteit.Eind" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="Activiteit.Eind" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Activiteit.Locatie" class="form-label"></label>
+                    <input asp-for="Activiteit.Locatie" class="form-control" placeholder="bv. CHE Ede, lokaal 1.23 of een middelbare school" />
+                </div>
+                <div class="col-12">
+                    <label asp-for="Activiteit.Omschrijving" class="form-label"></label>
+                    <textarea asp-for="Activiteit.Omschrijving" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-label fw-semibold">Wie geven de activiteit?</div>
+                    @if (Model.AllePersonen.Count == 0)
+                    {
+                        <p class="small text-body-secondary">Nog geen mensen. <a asp-page="/Personen/Bewerken">Voeg iemand toe</a>.</p>
+                    }
+                    @foreach (var p in Model.AllePersonen)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="PersoonIds" value="@p.Id" id="p@(p.Id)" checked="@Model.PersoonIds.Contains(p.Id)" />
+                            <label class="form-check-label" for="p@(p.Id)">@p.Naam <span class="text-body-secondary small">@p.Rol</span></label>
+                        </div>
+                    }
+                    <a class="small" asp-page="/Personen/Bewerken" target="_blank">+ nieuwe persoon (nieuw tabblad)</a>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-label fw-semibold">Welk materiaal is nodig?</div>
+                    @if (Model.AlleMaterialen.Count == 0)
+                    {
+                        <p class="small text-body-secondary">Nog geen materiaal. <a asp-page="/Materialen/Bewerken">Voeg materiaal toe</a>.</p>
+                    }
+                    @foreach (var m in Model.AlleMaterialen)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="MateriaalIds" value="@m.Id" id="m@(m.Id)" checked="@Model.MateriaalIds.Contains(m.Id)" />
+                            <label class="form-check-label" for="m@(m.Id)">@m.Naam <span class="text-body-secondary small">(@m.Aantal×)</span></label>
+                        </div>
+                    }
+                    <a class="small" asp-page="/Materialen/Bewerken" target="_blank">+ nieuw materiaal (nieuw tabblad)</a>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Opslaan</button>
+                <a class="btn btn-outline-secondary" asp-page="/Index">Annuleren</a>
+                @if (!nieuw)
+                {
+                    <button type="submit" class="btn btn-outline-danger ms-auto" asp-page-handler="Verwijderen" asp-route-id="@Model.Activiteit.Id"
+                            formnovalidate onclick="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?')">Verwijderen</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

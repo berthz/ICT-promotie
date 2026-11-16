@@ -1,0 +1,63 @@
+@page
+@model SchermModel
+@{
+    Layout = null;
+    var maand = Model.Overzicht.Kalender.EersteDag;
+}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="@Model.VerversenSeconden" />
+    <title>ICT-promotie – scherm</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="scherm">
+    <header class="scherm-kop">
+        <div>
+            <div class="scherm-titel">ICT-promotie <span class="opacity-75">· CHE Ede</span></div>
+            <div class="scherm-sub">Samen meer bezoekers naar de open dagen</div>
+        </div>
+        <div class="text-end">
+            <div class="scherm-klok" id="klok">@DateTime.Now.ToString("HH:mm")</div>
+            <div class="scherm-sub text-capitalize">@DateTime.Today.ToString("dddd d MMMM yyyy")</div>
+        </div>
+    </header>
+
+    <div class="scherm-inhoud">
+        <div class="scherm-kalender">
+            <div class="d-flex justify-content-between align-items-end mb-2">
+                <h1 class="h2 mb-0 text-capitalize">@maand.ToString("MMMM yyyy")</h1>
+                <partial name="_Legenda" />
+            </div>
+            <partial name="_Kalender" model="Model.Overzicht.Kalender" />
+        </div>
+        <aside class="scherm-zijbalk">
+            <partial name="_Zijbalk" model="Model.Overzicht" />
+        </aside>
+    </div>
+
+    <footer class="scherm-voet">
+        Activiteit of idee toevoegen?
+        @if (string.IsNullOrWhiteSpace(Model.BewerkUrl))
+        {
+            <span>Open deze pagina op je laptop en klik op <strong>Kalender</strong>.</span>
+        }
+        else
+        {
+            <span>Ga naar <strong>@Model.BewerkUrl</strong></span>
+        }
+        <a class="scherm-terug" asp-page="/Index">Terug naar bewerken</a>
+    </footer>
+
+    <script>
+        // Klok bijwerken; de pagina zelf ververst via de meta-refresh.
+        setInterval(() => {
+            document.getElementById('klok').textContent =
+                new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+        }, 10000);
+    </script>
+</body>
+</html>
